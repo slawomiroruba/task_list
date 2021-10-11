@@ -47,7 +47,11 @@ const todosList = JSON.parse(localStorage.getItem('todosList'))
 const loadTodo = (todo) => {
     newTodo = document.createElement('li')
     newTodo.textContent = todo.text;
-    newTodo.append(createToolsArea())
+    console.log(todo);
+    newTodo.append(createToolsArea(todo.completed))
+    if(todo.completed == true){
+        newTodo.classList.add('completed')
+    }
     ulList.append(newTodo)
     todoInput.value = ''
     errorInfo.textContent = ''
@@ -68,7 +72,7 @@ const addNewTodo = () => {
     }
 }
 
-const createToolsArea = () => {
+const createToolsArea = status => {
     let toolsArea = document.createElement('div')
     toolsArea.classList.add('tools')
 
@@ -76,6 +80,10 @@ const createToolsArea = () => {
     completeBtn.classList.add('complete')
     completeBtn.innerHTML = '<i class="fas fa-check"></i>'
     
+    if(status == true) {
+        completeBtn.classList.add('completed')
+    }
+
     let editBtn = document.createElement('button')
     editBtn.classList.add('edit')
     editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>'
