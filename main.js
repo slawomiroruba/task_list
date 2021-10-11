@@ -100,6 +100,7 @@ const checkClick = e => {
     if(e.target.matches('.complete')){
         e.target.closest('li').classList.toggle('completed')
         e.target.classList.toggle('completed')
+        console.log('Wykonano');
         updateLS()
     } else if(e.target.matches('.edit')) {
         editTodo(e)
@@ -159,5 +160,9 @@ const updateLS = () => {
         })
     })
 
-    localStorage.setItem('todosList', JSON.stringify(todosList))
+    var result = todosList.sort(function(a, b) {
+        return a.completed - b.completed
+    })
+
+    localStorage.setItem('todosList', JSON.stringify(result))
 }
