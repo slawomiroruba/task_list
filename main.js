@@ -11,11 +11,13 @@ let popupInput
 let popupAddBtn
 let popupCloseBtn
 
-
-
 const main = () => {
     prepareDOMElements()
     prepareDOMEvents()
+    
+    if(todosList) {
+        todosList.forEach(todo => loadTodo(todo))
+    }
 }
 
 const prepareDOMElements = () => {
@@ -40,6 +42,17 @@ const prepareDOMEvents = () => {
     todoInput.addEventListener('keyup', enterKeyCheck)
 }
 
+const todosList = JSON.parse(localStorage.getItem('todosList'))
+
+const loadTodo = (todo) => {
+    newTodo = document.createElement('li')
+    newTodo.textContent = todo.text;
+    newTodo.append(createToolsArea())
+    ulList.append(newTodo)
+    todoInput.value = ''
+    errorInfo.textContent = ''
+}
+
 const addNewTodo = () => {
     if(todoInput.value !== '') {
         newTodo = document.createElement('li')
@@ -49,6 +62,7 @@ const addNewTodo = () => {
         ulList.append(newTodo)
         todoInput.value = ''
         errorInfo.textContent = ''
+        updateLS()
     } else {
         errorInfo.textContent = 'Wpisz treść zadania!'
     }
@@ -64,7 +78,7 @@ const createToolsArea = () => {
     
     let editBtn = document.createElement('button')
     editBtn.classList.add('edit')
-    editBtn.innerHTML = 'EDIT'
+    editBtn.innerHTML = '<i class="fas fa-pencil-alt"></i>'
     
     let deleteBtn = document.createElement('button')
     deleteBtn.classList.add('delete')
@@ -78,10 +92,13 @@ const checkClick = e => {
     if(e.target.matches('.complete')){
         e.target.closest('li').classList.toggle('completed')
         e.target.classList.toggle('completed')
+        updateLS()
     } else if(e.target.matches('.edit')) {
         editTodo(e)
+        updateLS()
     } else if(e.target.matches('.delete')) {
         deleteTodo(e)
+        updateLS()
     }
 }
 
@@ -101,6 +118,7 @@ const changeTodoText = () => {
     if(popupInput.value !== ''){
         todoToEdit.firstChild.textContent = popupInput.value
         closePopup()
+        updateLS()
     } else {
         popupInfo.textContent = 'Wprowadzona wartość nie może być pusta!'
     }
@@ -121,3 +139,17 @@ const enterKeyCheck = e => {
 
 document.addEventListener('DOMContentLoaded', main)
 
+const updateLS = () => {
+    let todosEl = document.querySelectorAll('li')
+
+    const todosList = []
+
+    todosEl.forEach(todoEl => {
+        todosList.push({
+            text: todoEl.textContent,
+            completed: todoEl.classList.contains('completed')
+        })
+    })
+
+    localStorage.setItem('todosList', JSON.stringify(todosList))
+}

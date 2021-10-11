@@ -87,6 +87,7 @@ h1 {
 .todolist li {
     display: flex;
     justify-content: space-between;
+    height: 45px;
     align-items: center;
     margin: 15px;
     padding-left: 20px;
